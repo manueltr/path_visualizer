@@ -1,0 +1,28 @@
+div {
+    border: 1px solid black;
+  }
+  table {
+    border-collapse: collapse;
+    align-content: center;
+  }
+  td, tr {
+    background-color: bisque;
+    border: 1px solid black;
+    padding: 12.25px
+  }
+  h1 {
+    background-color: aqua;
+    
+  }
+  .wall {
+    background-color: black;
+  }
+  .start {
+    background-color: red;
+  }
+  .end {
+    background-color: blue;
+  }
+  .path {
+    background-color: yellow;
+  }
