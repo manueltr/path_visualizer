@@ -1,12 +1,53 @@
 $(document).ready( function() {
 
+    // trying to animate search progress
+    function markNode(v) {
+        $(`#${v.row}-${v.column}`).addClass('visited');
+    }
+
+    function displayVisited(index) {
+        if(index == visited.length) {
+            displayPath(0);
+            return;
+        }
+        setTimeout(function() {
+            markNode(visited[index]);
+            displayVisited(index+1);
+        }, 12);
+    }
+    var visited = [];
+
+    function displayPath(index) {
+        if(index == board.path.length) {
+            return;
+        }
+
+        setTimeout(function () {
+            let node = board.path[index];
+            $(`#${node.row}-${node.column}`).addClass('path');
+            displayPath(index + 1);
+        }, 30);
+    }
+
+    ///
 
     var board = {
         grid: [],
         mouse_down: false,
         start_node: null,
-        goal: null
+        goal: null,
+        path: []
     };
+
+    // display path
+    board.setPath = function () {
+        let node = board.goal;
+        while(node) {
+            board.path.push(node);
+            node = node.parent;
+        }
+        board.path.reverse();
+    }
 
     for(var i = 0; i < 20; i++) {
         $('table').append(`<tr id="${i}"></tr>`);
@@ -91,8 +132,11 @@ $(document).ready( function() {
                 v = queue.shift();
                 
                 if( v === goal) {
-                    return goal;
+                    board.setPath();
+                    displayVisited(0);
+                    return v;
                 }
+
                 for( var i = 0; i < v.neighbors.length; i++) {
                     neighbor = v.neighbors[i];
                     if(neighbor.isVisited == false)  {
@@ -100,6 +144,7 @@ $(document).ready( function() {
 
                         if(!neighbor.isWall) {
                             neighbor.parent = v;
+                            visited.push(neighbor);
                             queue.push(neighbor);
                         }
                     }
@@ -112,13 +157,6 @@ $(document).ready( function() {
         if(node === false) {
             console.log('No solution!')
         }
-        else {
-            while(node.parent) {
-                $(`#${node.row}-${node.column}`).addClass('path');
-                node = node.parent;
-            }
-        }
-
     })
 
 

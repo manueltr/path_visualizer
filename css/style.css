@@ -1,28 +1,110 @@
-div {
+  #divTable {
     border: 1px solid black;
   }
+  #flexContainer {
+    display: flex;
+    justify-content: flex-start;
+    background-color: black;
+  }
+  h1 {
+    color: white;  
+  }
+
   table {
+    background-color: white;
     border-collapse: collapse;
     align-content: center;
   }
   td, tr {
-    background-color: bisque;
     border: 1px solid black;
-    padding: 12.25px
+    padding: 16px
   }
-  h1 {
-    background-color: aqua;
-    
+
+  p {
+    background-color: aliceblue;
   }
+
+
   .wall {
     background-color: black;
+    
+    /*animation*/
+    animation: wall;
+    animation-duration: .8s;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
   }
+
+  @keyframes wall {
+    0% {
+      transform: scale(.3);
+      background-color: rgba(0, 0, 0, .8);
+    }
+    75% {
+      transform: scale(1.25);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .visited {
+    background-color: rgb(255, 140, 26);
+    animation: visited;
+    animation-duration: 1.5s;
+
+  }
+
+  @keyframes visited {
+    0% {
+      transform: scale(.3);
+      background-color: rgba(179, 89, 0,.5);
+      border-radius: 30px;
+    }
+    25% {
+      scale: (.5);
+      background-color: rgba(230, 115, 0,.8);
+      border-radius: 10px;
+    }
+
+    50% {
+      transform: scale(.7);
+      background-color: rgb(153, 77, 0);
+    }
+    75% {
+      transform: scale(1.1);
+      background-color: rgb(204, 102, 0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
   .start {
     background-color: red;
   }
   .end {
     background-color: blue;
   }
+
+
   .path {
-    background-color: yellow;
+    background-color: rgb(248, 211, 46);
+    animation: path;
+    animation-duration: .8s;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+  }
+
+  @keyframes path {
+    0% {
+      transform: scale(.8);
+      background-color: rgba(248, 211, 46, 0.945);
+    }
+    75% {
+      transform: scale(1.25);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
