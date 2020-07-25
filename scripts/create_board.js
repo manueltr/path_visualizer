@@ -66,7 +66,9 @@ $(document).ready( function() {
     board.start_node = board.grid[10][10];
     board.goal = board.grid[10][30];
     $('#10-10').addClass('start');
+    $('#10-10').append(`<i id="start" class="fa fa-chevron-right"></i>`);
     $('#10-30').addClass('end');
+    $('#10-30').append(`<i id="end" class="fa fa-dot-circle-o"></i>`);
 
     function add_neighbors(board) {
         for( var i = 0; i < board.length; i++) {
@@ -126,6 +128,7 @@ $(document).ready( function() {
         function bfs(start, goal) {
             queue = [];
             start.isVisited = true;
+            visited.push(start);
             queue.push(start);
         
             while (queue.length > 0) {
