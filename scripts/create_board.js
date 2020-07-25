@@ -1,22 +1,19 @@
 $(document).ready( function() {
 
-    // trying to animate search progress
-    function markNode(v) {
-        $(`#${v.row}-${v.column}`).addClass('visited');
-    }
-
+    // animate search algorithm
     function displayVisited(index) {
-        if(index == visited.length) {
+        if(index == board.visited.length) {
             displayPath(0);
             return;
         }
         setTimeout(function() {
-            markNode(visited[index]);
+            let v = board.visited[index];
+            $(`#${v.row}-${v.column}`).addClass('visited');
             displayVisited(index+1);
         }, 12);
     }
-    var visited = [];
 
+    //animate path creation
     function displayPath(index) {
         if(index == board.path.length) {
             return;
@@ -26,33 +23,16 @@ $(document).ready( function() {
             let node = board.path[index];
             $(`#${node.row}-${node.column}`).addClass('path');
             displayPath(index + 1);
-        }, 30);
+        }, 75);
     }
 
-    ///
 
-    var board = {
-        grid: [],
-        mouse_down: false,
-        start_node: null,
-        goal: null,
-        path: []
-    };
-
-    // display path
-    board.setPath = function () {
-        let node = board.goal;
-        while(node) {
-            board.path.push(node);
-            node = node.parent;
-        }
-        board.path.reverse();
-    }
-
+    // create board object
+    var board = new Board();
+    // create all node objects
     for(var i = 0; i < 20; i++) {
         $('table').append(`<tr id="${i}"></tr>`);
         var board_row = [];
-        var row = '';
 
         for(var j = 0; j < 40; j++) {
             $(`#${i}`).append(`<td id="${i}-${j}"></td>`);
@@ -70,6 +50,7 @@ $(document).ready( function() {
     $('#10-30').addClass('end');
     $('#10-30').append(`<i id="end" class="fa fa-dot-circle-o"></i>`);
 
+    //set for all nodes in grid their neighboring nodes
     function add_neighbors(board) {
         for( var i = 0; i < board.length; i++) {
             for( var j = 0; j < board[i].length; j++) {
@@ -94,6 +75,41 @@ $(document).ready( function() {
         }
     }
     add_neighbors(board.grid);
+
+
+// Search algorithms
+
+    // breadth first search algo function
+    function bfs(start, goal) {
+        queue = [];
+        start.isVisited = true;
+        board.visited.push(start);
+        queue.push(start);
+    
+        while (queue.length > 0) {
+            let v = queue.shift();
+            
+            if( v === goal) {
+                board.setPath();
+                displayVisited(0);
+                return v;
+            }
+
+            for( var i = 0; i < v.neighbors.length; i++) {
+                let neighbor = v.neighbors[i];
+                if(neighbor.isVisited == false)  {
+                    neighbor.isVisited = true;
+
+                    if(!neighbor.isWall) {
+                        neighbor.parent = v;
+                        board.visited.push(neighbor);
+                        queue.push(neighbor);
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     $('table').on('mousedown', function (e) {
         e.preventDefault();
@@ -121,47 +137,23 @@ $(document).ready( function() {
         }
     })
 
-    // Bread First Search
     $('#bfs').on('click', function () {
         
-        //breadth first search algo function
-        function bfs(start, goal) {
-            queue = [];
-            start.isVisited = true;
-            visited.push(start);
-            queue.push(start);
-        
-            while (queue.length > 0) {
-                v = queue.shift();
-                
-                if( v === goal) {
-                    board.setPath();
-                    displayVisited(0);
-                    return v;
-                }
-
-                for( var i = 0; i < v.neighbors.length; i++) {
-                    neighbor = v.neighbors[i];
-                    if(neighbor.isVisited == false)  {
-                        neighbor.isVisited = true;
-
-                        if(!neighbor.isWall) {
-                            neighbor.parent = v;
-                            visited.push(neighbor);
-                            queue.push(neighbor);
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
         let node = bfs(board.start_node, board.goal);
         if(node === false) {
             console.log('No solution!')
         }
     })
 
-
+    $('html').on('click', function (e) {
+        if (e.target === document.getElementsByClassName('dropbtn')[0]
+            || e.target === document.getElementById('algos')) {
+            $('.dropdown-content').attr('id', 'showDrop');
+        }
+        else {
+            $('.dropdown-content').attr('id', 'hideDrop'); 
+        }
+    })
+    
     
 });

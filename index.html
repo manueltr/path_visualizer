@@ -2,23 +2,47 @@
 <html>
   <head>
     <title>Pathfinding Visualizer</title>
-    <div id="flexContainer">
-      <h1>Pathfinding Visualizer</h1>
-      <button id="bfs">bfs</button>
-    </div>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <script src="scripts/jquery-3.5.1.js"></script>
 
 
+    <script src="scripts/board.js"></script>
     <script src="scripts/node.js"></script>
     <script src="scripts/create_board.js"></script>
   </head>
+
   <body>
-    <p>
-      Just starting out
-    </p>
+    <!-- <nav>
+      <ul class="bar">
+        <li><a id="logo" href="#">Pathfinding Visualizer</a></li>
+        <li><a id="toggle" href="#"></a>Algorithm</li>
+        <li><a class="button" href="#"></a>Create Maze</li>
+        <li><a id="button main" href="#"></a>Run!</li>
+        <li><a class="button" href="#"></a>Clear board</li>
+        <li><button id="bfs">bfs</button></li>
+      </ul>
+    </nav> -->
+    <nav>
+      <ul class = "bar">
+
+        <li><h1>Pathfinding Visualizer</h1></li>
+        <li class="dropdown">
+          <a class="dropbtn">Algorithms
+            <i id="algos" class="fa fa-chevron-right"></i>
+          </a>
+          <div class="dropdown-content">
+            <a id="bfs" href="#">Breadth-first search</a>
+            <a href="#">Placeholder</a>
+            <a href="#">Placeholder</a>
+            <a href="#">Placeholder</a>
+            <a href="#">Placeholder</a>
+          </div>
+        </li>
+
+      </ul>
+    </nav>
     <div id = "divTable">
       <table id="grid"></table>
     </div>
