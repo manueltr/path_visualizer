@@ -10,7 +10,7 @@ $(document).ready( function() {
             let v = board.visited[index];
             $(`#${v.row}-${v.column}`).addClass('visited');
             displayVisited(index+1);
-        }, 12);
+        }, 25);
     }
 
     //animate path creation
@@ -92,7 +92,7 @@ $(document).ready( function() {
 
     // breadth first search algo function
     function bfs(start, goal) {
-        queue = [];
+        let queue = [];
         start.isVisited = true;
         board.visited.push(start);
         queue.push(start);
@@ -121,6 +121,39 @@ $(document).ready( function() {
         }
         return false;
     }
+
+    // Depth first search algorithm function
+    function dfs(start) {
+        let stack = [];
+        stack.push(start);
+
+        while(stack.length) {
+            let v = stack.pop();
+            v.isVisited = true;
+
+            if(!v.isWall) {
+                board.visited.push(v);
+            }
+            else {
+                continue;
+            }
+
+            if(v === board.goal) {
+                displayVisited(0);
+                board.setPath();
+                break;
+            }
+            v.shuffleNeighbors();
+            for( var i = 0; i < v.neighbors.length; i++) {
+                if(!v.neighbors[i].isVisited) {
+                    v.neighbors[i].parent = v;
+                    stack.push(v.neighbors[i]);
+                }
+            }
+        }
+    }
+
+
 
     $('table').on('mousedown', function (e) {
         e.preventDefault();
@@ -152,7 +185,14 @@ $(document).ready( function() {
         
         let node = bfs(board.start_node, board.goal);
         if(node === false) {
-            console.log('No solution!')
+            console.log('No solution!');
+        }
+    })
+
+    $('#dfs').on('click', function () {
+        dfs(board.start_node);
+        if(board.goal.parent == null) {
+            console.log("No Solution");
         }
     })
 
@@ -168,9 +208,6 @@ $(document).ready( function() {
 
     $('#maze').on('click', function() {
         board.createMaze(board.grid);
-        console.log("hello");
-        console.log(board.mazeGeneration);
-        console.log(board.mazeGeneration.length);
 
         breakWall(0);
         board.start_node.isWall = false;
