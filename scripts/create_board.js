@@ -26,6 +26,18 @@ $(document).ready( function() {
         }, 75);
     }
 
+    function breakWall(index) {
+        if(index == board.mazeGeneration.length) {
+            return;
+        }
+
+        setTimeout(function () {
+            let node = board.mazeGeneration[index];
+            $(`#${node.row}-${node.column}`).addClass('breakWall');
+            breakWall(index + 1);
+        }, 25);
+    }
+
 
     // create board object
     var board = new Board();
@@ -45,9 +57,7 @@ $(document).ready( function() {
     //make start_node and end node
     board.start_node = board.grid[10][10];
     board.goal = board.grid[10][30];
-    $('#10-10').addClass('start');
     $('#10-10').append(`<i id="start" class="fa fa-chevron-right"></i>`);
-    $('#10-30').addClass('end');
     $('#10-30').append(`<i id="end" class="fa fa-dot-circle-o"></i>`);
 
     //set for all nodes in grid their neighboring nodes
@@ -75,6 +85,7 @@ $(document).ready( function() {
         }
     }
     add_neighbors(board.grid);
+
 
 
 // Search algorithms
@@ -153,6 +164,17 @@ $(document).ready( function() {
         else {
             $('.dropdown-content').attr('id', 'hideDrop'); 
         }
+    })
+
+    $('#maze').on('click', function() {
+        board.createMaze(board.grid);
+        console.log("hello");
+        console.log(board.mazeGeneration);
+        console.log(board.mazeGeneration.length);
+
+        breakWall(0);
+        board.start_node.isWall = false;
+        board.goal.isWall = false;
     })
     
     

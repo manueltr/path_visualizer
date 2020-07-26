@@ -81,6 +81,10 @@ td, tr {
 }
 
 
+.mazeStart {
+  background-color: black;
+}
+
 .wall {
   background-color: black;
   
@@ -101,6 +105,31 @@ td, tr {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+.breakWall {
+  background-color: white;
+  
+  /*animation*/
+  animation: breakWall;
+  animation-duration: .8s;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
+}
+
+@keyframes breakWall {
+  0% {
+    background-color: rgba(0, 0, 0, .8);
+  }
+  50% {
+    background-color: rgb(26, 26, 26);
+  }
+  75% {
+    background-color: rgb(89, 89, 89);
+  }
+  100% {
+    background-color: white;
   }
 }
 
