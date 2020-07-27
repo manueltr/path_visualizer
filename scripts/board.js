@@ -7,6 +7,42 @@ function Board(){
     this.path = [];
     this.visited = [];
     this.mazeGeneration = [];
+    this.currentAlgo = '';
+    this.runningAlgo = false;
+
+    this.reset = function (type) {
+        this.visited = [];
+        this.path = [];
+        for( let i = 0; i < this.grid.length; i++) {
+            for( let j = 0; j < this.grid[0].length; j++) {
+
+                let node = this.grid[i][j];
+                node.isVisited = false;
+                node.parent = null;
+                let classAttr = $(`#${node.row}-${node.column}`).attr('class');
+
+                // Doesnt not remove walls.
+                if(type === 'reRun') {
+                    if(!classAttr.includes('wall') 
+                        && !classAttr.includes('mazeStart')){
+
+                        $(`#${node.row}-${node.column}`).attr('class', 'n');
+                    }
+                }   // resets all nodes back to initial state.
+                else {
+                    this.mazeGeneration = [];
+                    node.isWall = false;
+                    $(`#${node.row}-${node.column}`).attr('class', 'n');
+                }
+                if(node === this.start_node) {
+                    $(`#${node.row}-${node.column}`).addClass('class', 'start');
+                }
+                else if(node === this.goal) {
+                    $(`#${node.row}-${node.column}`).addClass('class', 'end');
+                }
+            }
+        }
+    }
 
     this.setPath = function () {
         let node = this.goal;
@@ -74,9 +110,9 @@ function Board(){
         // make all nodes a wall
         for( let i = 0; i < this.grid.length; i++) {
             for( let j = 0; j < this.grid[0].length; j++) {
-                this.grid[i][j].isWall = true;
                 if(this.grid[i][j] !== this.start_node
                     && this.grid[i][j] !== this.goal) {
+                        this.grid[i][j].isWall = true;
                         $(`#${i}-${j}`).addClass('mazeStart');
                     }
             }
@@ -140,8 +176,5 @@ function Board(){
             this.mazeGeneration.push(cNode);
             addValidNeighbor(cNode,this.grid);
         }
-
-
     }
-
 }

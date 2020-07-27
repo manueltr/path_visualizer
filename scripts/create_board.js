@@ -23,7 +23,7 @@ $(document).ready( function() {
             let node = board.path[index];
             $(`#${node.row}-${node.column}`).addClass('path');
             displayPath(index + 1);
-        }, 75);
+        }, 60);
     }
 
     function breakWall(index) {
@@ -33,7 +33,7 @@ $(document).ready( function() {
 
         setTimeout(function () {
             let node = board.mazeGeneration[index];
-            $(`#${node.row}-${node.column}`).addClass('breakWall');
+            $(`#${node.row}-${node.column}`).attr('class','breakWall');
             breakWall(index + 1);
         }, 25);
     }
@@ -47,7 +47,7 @@ $(document).ready( function() {
         var board_row = [];
 
         for(var j = 0; j < 40; j++) {
-            $(`#${i}`).append(`<td id="${i}-${j}"></td>`);
+            $(`#${i}`).append(`<td id="${i}-${j}" class="n"></td>`);
             board_row.push(new Node(i, j));
 
         }
@@ -59,6 +59,8 @@ $(document).ready( function() {
     board.goal = board.grid[10][30];
     $('#10-10').append(`<i id="start" class="fa fa-chevron-right"></i>`);
     $('#10-30').append(`<i id="end" class="fa fa-dot-circle-o"></i>`);
+    $('#10-10').addClass('start');
+    $('#10-30').addClass('end');
 
     //set for all nodes in grid their neighboring nodes
     function add_neighbors(board) {
@@ -102,7 +104,6 @@ $(document).ready( function() {
             
             if( v === goal) {
                 board.setPath();
-                displayVisited(0);
                 return v;
             }
 
@@ -139,11 +140,9 @@ $(document).ready( function() {
             }
 
             if(v === board.goal) {
-                displayVisited(0);
                 board.setPath();
                 break;
             }
-            v.shuffleNeighbors();
             for( var i = 0; i < v.neighbors.length; i++) {
                 if(!v.neighbors[i].isVisited) {
                     v.neighbors[i].parent = v;
@@ -167,8 +166,8 @@ $(document).ready( function() {
     $('td').on('mouseenter', function (e) {
         if(board.mouse_down) {
             e.preventDefault();
-            if( $(this).attr('class') != 'start'
-                && $(this).attr('class') != 'end' ) {
+            if( !$(this).attr('class').includes('start')
+                && !$(this).attr('class').includes('end')) {
 
                 $(this).attr('class', 'wall');
 
@@ -181,19 +180,14 @@ $(document).ready( function() {
         }
     })
 
-    $('#bfs').on('click', function () {
-        
-        let node = bfs(board.start_node, board.goal);
-        if(node === false) {
-            console.log('No solution!');
-        }
+    $('#bfs').on('click', function () {    
+        board.currentAlgo = 'bfs';
+        $('#run').html("Run<br>BFS");
     })
 
     $('#dfs').on('click', function () {
-        dfs(board.start_node);
-        if(board.goal.parent == null) {
-            console.log("No Solution");
-        }
+        board.currentAlgo = 'dfs';
+        $('#run').html("Run<br>DFS");
     })
 
     $('html').on('click', function (e) {
@@ -207,12 +201,36 @@ $(document).ready( function() {
     })
 
     $('#maze').on('click', function() {
+        board.reset('ClearAllBoard');
         board.createMaze(board.grid);
 
         breakWall(0);
-        board.start_node.isWall = false;
-        board.goal.isWall = false;
     })
-    
-    
+
+    $('#clear').on('click', () => { board.reset('ClearAllBoard'); })
+
+    // main run button
+    $('#run').on('click', function() {
+        board.reset('reRun');
+        switch(board.currentAlgo){
+            case '':
+                $('#run').html("Pick<br>Algorithm!");
+                break;
+            case 'bfs':
+                let node = bfs(board.start_node, board.goal);
+                displayVisited(0);
+                if(node === false) {
+                    console.log('No solution!');
+                }
+                break;
+            case 'dfs':
+                dfs(board.start_node);
+                displayVisited(0);
+                if(board.goal.parent == null) {
+                    console.log("No Solution");
+                }
+                break;
+        };
+    })
+
 });
