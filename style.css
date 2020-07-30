@@ -34,6 +34,8 @@ li {
   font-size: 18px;
   cursor: pointer;
 }
+
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -41,15 +43,43 @@ li {
   margin-top: 10px;
   min-width: 150px;
   z-index: 1;
+  border-radius: 10px;
 }
 .dropdown-content a {
   color: white;
   padding: 10px 10px;
   text-decoration: none;
   display: block;
+  text-align: center;
+}
+
+.dropdown-content-2 {
+  display: none;
+  position: absolute;
+  background-color: black;
+  margin-top: 10px;
+  min-width: 100px;
+  z-index: 1;
+  border-radius: 10px;
+}
+.dropdown-content-2 a {
+  color: white;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+a:hover {
+  color: #949494;
+}
+a:hover i {
+  filter: invert(62%) sepia(10%) saturate(12%)
+   hue-rotate(343deg) brightness(92%) contrast(89%);
 }
 
 #run {
+  cursor: pointer;
   margin-left: 20px;
   min-width: 120px;
   min-height: 50px;
@@ -70,34 +100,33 @@ li {
   display: none;
 }
 
-#algos {
-  color: white;
-  transform: rotate(90deg) scale(.7) translate(2px,3px);
+i {
+  padding: 10px;
+  background-image: url(icons/chevron-down.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px;
+  filter: invert(100%) sepia(100%) saturate(0%)
+   hue-rotate(302deg) brightness(103%) contrast(101%);
 }
 
 #divTable {
-  margin-top: 50px;
-  padding: 10px;
-  border: 1px solid black;
+  margin: 10px;
+  margin-top: 38px;
 }
 h1 {
   color: white;  
 }
 
 table {
+  margin: auto;
   background-color: white;
   border-collapse: collapse;
-  align-content: center;
 }
 td, tr {
   border: 1px solid black;
   padding: 16px
 }
-
-.n{
-  background-color: white;
-}
-
 .mazeStart {
   background-color: black;
 }
@@ -150,10 +179,14 @@ td, tr {
   }
 }
 
+.visitedQuick {
+  background-color: rgb(255, 140, 26);
+}
+
 .visited {
   background-color: rgb(255, 140, 26);
   animation: visited;
-  animation-duration: 1.5s;
+  animation-duration: 1.3s;
 
 }
 
@@ -183,17 +216,42 @@ td, tr {
 }
 
 
-#start {
-  position: absolute;
-  transform: translate(-4px, -7px) scale(1.2);
+.start {
+  background-image: url(icons/chevron-right.svg);
+  fill: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px;
+  animation: animatePoint;
+  animation-duration: 1s;
+
 }
 
-#end {
-  position: absolute;
-  transform: translate(-7px, -7px) scale(1.3);
+.end {
+  background-image: url(icons/dot-circle.svg);
+  fill: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  animation: animatePoint;
+  animation-duration: 1s;
+}
+@keyframes animatePoint {
+  0% {
+    transform: scale(.6);
+    opacity: .7;
+  }
+  50% {
+    transform:  scale(1.3);
+  }
+  100%  {
+    transform: scale(1);
+  }
 }
 
-
+.pathQuick {
+  background-color: rgb(248, 211, 46);
+}
 .path {
   background-color: rgb(248, 211, 46);
   animation: path;

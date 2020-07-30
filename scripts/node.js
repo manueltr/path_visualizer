@@ -6,6 +6,7 @@ function Node(row, column) {
     this.parent = null;
     this.isWall = false;
     this.isVisited = false;
+    this.manhattan = 0;
 
     // this.shuffleNeighbors = function() {
     //     var ctr = this.neighbors.length, temp, index;

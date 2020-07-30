@@ -8,7 +8,12 @@ function Board(){
     this.visited = [];
     this.mazeGeneration = [];
     this.currentAlgo = '';
-    this.runningAlgo = false;
+    this.running = false;
+    this.moving_start = false;
+    this.moving_end = false;
+    this.hasRan = false;
+    this.toggle = false;
+    this.speed = 1;
 
     this.reset = function (type) {
         this.visited = [];
@@ -26,21 +31,25 @@ function Board(){
                     if(!classAttr.includes('wall') 
                         && !classAttr.includes('mazeStart')){
 
-                        $(`#${node.row}-${node.column}`).attr('class', 'n');
+                        $(`#${node.row}-${node.column}`).attr('class', '');
                     }
                 }   // resets all nodes back to initial state.
                 else {
-                    this.mazeGeneration = [];
                     node.isWall = false;
-                    $(`#${node.row}-${node.column}`).attr('class', 'n');
+                    $(`#${node.row}-${node.column}`).attr('class', '');
                 }
+
                 if(node === this.start_node) {
-                    $(`#${node.row}-${node.column}`).addClass('class', 'start');
+                    $(`#${node.row}-${node.column}`).addClass('start');
                 }
                 else if(node === this.goal) {
-                    $(`#${node.row}-${node.column}`).addClass('class', 'end');
+                    $(`#${node.row}-${node.column}`).addClass('end');
                 }
             }
+        }
+        if(type !== 'reRun') {
+            this.mazeGeneration = [];
+            this.hasRan = false;
         }
     }
 
@@ -112,15 +121,14 @@ function Board(){
             for( let j = 0; j < this.grid[0].length; j++) {
                 if(this.grid[i][j] !== this.start_node
                     && this.grid[i][j] !== this.goal) {
-                        this.grid[i][j].isWall = true;
                         $(`#${i}-${j}`).addClass('mazeStart');
-                    }
+                }
+                this.grid[i][j].isWall = true;
             }
         }
 
         let y = Math.floor(Math.random() * this.grid.length);
         let x = Math.floor(Math.random() * this.grid[0].length);
-        console.log(`r = ${y} c = ${x}`);
 
         let start = this.grid[y][x];
         start.isWall = false;
@@ -175,6 +183,22 @@ function Board(){
             
             this.mazeGeneration.push(cNode);
             addValidNeighbor(cNode,this.grid);
+        }
+        this.start_node.isWall = false;
+        this.goal.isWall = false;
+    }
+    this.findDistances = function () {
+
+        let goal = this.goal;
+        let row = goal.row;
+        let col = goal.column;
+
+        for(let i = 0; i < this.grid.length; i++) {
+            for( let j = 0; j < this.grid[0].length; j++) {
+                let cnode = this.grid[i][j];
+                cnode.manhattan = Math.abs(cnode.row - row);
+                cnode.manhattan += Math.abs(cnode.column - col);
+            }
         }
     }
 }

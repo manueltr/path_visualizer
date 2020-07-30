@@ -4,13 +4,12 @@
     <title>Pathfinding Visualizer</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <script src="scripts/jquery-3.5.1.js"></script>
 
 
     <script src="scripts/board.js"></script>
     <script src="scripts/node.js"></script>
-    <script src="scripts/create_board.js"></script>
+    <script src="scripts/main.js"></script>
   </head>
 
   <body>
@@ -30,20 +29,30 @@
         <li><h1>Pathfinding Visualizer</h1></li>
         <li class="dropdown">
           <a class="dropbtn">Algorithms
-            <i id="algos" class="fa fa-chevron-right"></i>
+            <i id="algos"></i>
           </a>
           <div class="dropdown-content">
-            <a id="bfs" href="#">Breadth-first search</a>
-            <a id="dfs" href="#">Depth First search</a>
-            <a href="#">Placeholder</a>
-            <a href="#">Placeholder</a>
-            <a href="#">Placeholder</a>
+            <a id="bfs">Breadth-first search</a>
+            <a id="dfs">Depth-First search</a>
+            <a id="gbfs">Greedy Best-First search</a>
+            <a>Placeholder</a>
+            <a>Placeholder</a>
           </div>
         </li>
-        <li><button id="maze">Generate Maze</button></li>
-        <li><button id="run">Run!</button></li>
-        <li><button id="clear">clear board</button></li>
-        <li><button id="clear">speed</button></li>
+        <li><a id="maze" class="dropbtn">Generate Maze</a></li>
+        <li><button id="run">Select<br>Algorithm</button></li>
+        <li><a id="clear" class="dropbtn">Clear Board</a></li>
+        <li class="dropdown">
+          <a class="dropbtn speed">Speed: Normal<i id="speed"></i></a>
+          <div class="dropdown-content-2">
+            <a id="slow">Slow</a>
+            <a id="med">Normal</a>
+            <a id="fast">Fast</a>
+          </div>
+
+
+        </li>
+        <li><a id="toggle" class="dropbtn">Toggle: Adding Walls</a></li>
 
       </ul>
     </nav>
