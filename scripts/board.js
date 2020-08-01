@@ -24,6 +24,7 @@ function Board(){
                 let node = this.grid[i][j];
                 node.isVisited = false;
                 node.parent = null;
+                node.pathCost = 0;
                 let classAttr = $(`#${node.row}-${node.column}`).attr('class');
 
                 // Doesnt not remove walls.
@@ -198,6 +199,17 @@ function Board(){
                 let cnode = this.grid[i][j];
                 cnode.manhattan = Math.abs(cnode.row - row);
                 cnode.manhattan += Math.abs(cnode.column - col);
+            }
+        }
+    }
+
+
+    this.initializeDijkstra = function (start) {
+        for(let i = 0; i < this.grid.length; i++) {
+            for(let j = 0; j < this.grid[0].length; j++) {
+                if(this.grid[i][j] !== start) {
+                    this.grid[i][j].pathCost = Number.POSITIVE_INFINITY;
+                }
             }
         }
     }

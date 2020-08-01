@@ -119,13 +119,38 @@ $(document).ready( function() {
 
 
     // return the node with the minimum manhattan distance
-    function min(array) {
+    function minManhattan(array) {
         let minVal = Number.POSITIVE_INFINITY;
         let index = null;
         for( let i = 0; i < array.length; i++){
             if(array[i].manhattan < minVal) {
                 index = i;
                 minVal = array[i].manhattan;
+            }
+        }
+        return array.splice(index,1)[0];
+    }
+
+    // return the node with the minimun path cost
+    function minPathCost(array) {
+        let minVal = Number.POSITIVE_INFINITY;
+        let index = null;
+        for( let i = 0; i < array.length; i++){
+            if(array[i].pathCost <= minVal) {
+                index = i;
+                minVal = array[i].pathCost;
+            }
+        }
+        return array.splice(index,1)[0];
+    }
+
+    function minTotal(array) {
+        let minVal = Number.POSITIVE_INFINITY;
+        let index = null;
+        for(let i = 0; i < array.length; i++) {
+            if((array[i].pathCost + array[i].manhattan) < minVal) {
+                index = i;
+                minVal = (array[i].pathCost + array[i].manhattan)
             }
         }
         return array.splice(index,1)[0];
@@ -145,7 +170,7 @@ $(document).ready( function() {
         board.visited.push(start);
 
         while(pq.length) {
-            let v = min(pq);
+            let v = minManhattan(pq);
             board.visited.push(v);
             
             if(v === board.goal) {
@@ -226,6 +251,82 @@ $(document).ready( function() {
         }
     }
 
+    // Dijkstra's Algorithm
+    function dijkstra(start) {
+        board.initializeDijkstra(start);
+        let pq = [];
+        pq.unshift(start);
+
+        while(pq.length) {
+            let v = minPathCost(pq);
+            board.visited.push(v);
+            v.isVisited = true;
+
+            for(let i = 0; i < v.neighbors.length; i++) {
+                let neighbor = v.neighbors[i];
+                if(!neighbor.isVisited && !neighbor.isWall){
+                    if(v.pathCost + 1 < neighbor.pathCost) {
+                        neighbor.pathCost = v.pathCost + 1;
+                        neighbor.parent = v;
+                        pq.unshift(neighbor);
+                    }
+                }
+            }
+            if(v === board.goal) {
+                board.setPath();
+                return;
+            }
+        }
+
+    }
+
+    // A* Search Algorithm
+    function a(start) {
+        board.findDistances();
+        let pq = [];
+        pq.unshift(start);
+
+        while(pq.length) {
+
+            let v = minTotal(pq);
+            board.visited.push(v);
+            v.isVisited = true;
+
+            if(v === board.goal) {
+                board.setPath();
+                return;
+            }
+
+            for(let i = 0; i < v.neighbors.length; i++) {
+                let neighbor = v.neighbors[i];
+                if(!neighbor.isVisited && !neighbor.isWall) {
+
+                    let findNeighbor = null;
+                    for(let j = 0; j < pq.length; j++) {
+                        if(neighbor === pq[j]) {
+                            findNeighbor = neighbor;
+                        }
+                    }
+
+                    // if neighbor is not in pq array add it.
+                    if(findNeighbor == null) {
+                        neighbor.pathCost = v.pathCost + 1;
+                        neighbor.parent = v;
+                        pq.unshift(neighbor);
+                    }
+                    else {
+                    // else if new path cost is lower than what it currently has
+                    // update with new cost and update parent.
+                        if(v.pathCost + 1 < neighbor.pathCost) {
+                            neighbor.pathCost = v.pathCost + 1;
+                            neighbor.parent = v;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // main run function
     function runAlgo(type) {
 
@@ -278,9 +379,38 @@ $(document).ready( function() {
                     if(board.goal.parent == null) {
                         console.log("No Solution");
                     }
+                case 'dijkstra':
+                    board.hasRan = true;
+                    board.running = true;
+                    dijkstra(board.start_node);
+                    if(type === 'hasRan') {
+                        displayVisitedQuick();
+                    }
+                    else {
+                        displayVisited(0);
+                    }
+                    if(board.goal.parent == null) {
+                        console.log("No Solution");
+                    }
+                case 'A*':
+
+                    board.hasRan = true;
+                    board.running = true;
+                    a(board.start_node);
+                    if(type === 'hasRan'){
+                        displayVisitedQuick();
+                    }
+                    else {
+                        displayVisited(0);
+                    }
+                    if(board.goal.parent == null) {
+                        console.log("No Solution");
+                    }
             };
         }
     }
+
+    // Event handlers
 
     $('td').on('mousedown', function (e) {
         e.preventDefault();
@@ -322,9 +452,12 @@ $(document).ready( function() {
         if(!board.running) {
             let isWall = $(this).attr('class').includes('wall');
             let isMaze = $(this).attr('class').includes('mazeStart');
+            let isStart = $(this).attr('class').includes('start');
+            let isGoal = $(this).attr('class').includes('end');
+
             if(board.moving_start) {
 
-                if(isWall || isMaze) {
+                if(isWall || isMaze || isGoal) {
                     let row = board.start_node.row;
                     let col = board.start_node.column;
                     let id = `#${row}-${col}`;
@@ -335,7 +468,10 @@ $(document).ready( function() {
                     if(isMaze) {
                         $(this).attr('class','mazeStart');
                     }
-                    else{
+                    else if(isGoal){
+                        $(this).attr('class','end');
+                    }
+                    else {
                         $(this).attr('class','wall');
                     }
                 }
@@ -346,18 +482,20 @@ $(document).ready( function() {
                 }
             }
             if(board.moving_end) {
-                if(isWall || isMaze) {
+                if(isWall || isMaze || isStart) {
 
                     let id = `#${board.goal.row}-${board.goal.column}`;
                     $(id).addClass('end');
                     if(board.hasRan) {
                         $(id).addClass('end pathQuick');
                     }
-                    $(this).attr('class', 'wall');
                     if(isMaze) {
                         $(this).attr('class','mazeStart');
                     }
-                    else{
+                    else if(isStart){
+                        $(this).attr('class','start');
+                    }
+                    else {
                         $(this).attr('class','wall');
                     }
                 }
@@ -382,8 +520,10 @@ $(document).ready( function() {
             let coords = $(this).attr('id').split('-');
             let isWall = $(this).attr('class').includes('wall');
             let isMaze = $(this).attr('class').includes('mazeStart');
+            let isStart = $(this).attr('class').includes('start');
+            let isGoal = $(this).attr('class').includes('end');
 
-            if(board.moving_start && !isWall && !isMaze) {
+            if(board.moving_start && !isWall && !isMaze && !isGoal) {
                $(this).addClass('start');
                board.start_node = board.grid[coords[0]][coords[1]];
 
@@ -392,7 +532,7 @@ $(document).ready( function() {
                     runAlgo('hasRan');
                 }
             }
-            else if(board.moving_end && !isWall && !isMaze) {
+            else if(board.moving_end && !isWall && !isMaze && !isStart) {
                 $(this).addClass('end');
                 board.goal = board.grid[coords[0]][coords[1]];
 
@@ -401,8 +541,6 @@ $(document).ready( function() {
                 }
             }
             else {
-                let isStart = $(this).attr('class').includes('start');
-                let isGoal = $(this).attr('class').includes('end');
 
                 if(!isStart && !isGoal && !isMaze && !board.toggle) {
                     $(e.target).attr('class', 'wall');
@@ -411,8 +549,8 @@ $(document).ready( function() {
                     let coords = id.split('-');
                     board.grid[coords[0]][coords[1]].isWall = true;
                 }
-                else if(!isStart && !isGoal && board.toggle
-                     && (isMaze || isWall)) {
+                else if(board.toggle && (isMaze || isWall) && !board.moving_end
+                    && !board.moving_start) {
                     $(e.target).attr('class', '');
 
                     // remove wall
@@ -428,10 +566,13 @@ $(document).ready( function() {
         if(board.mouse_down) {
             let isWall = $(this).attr('class').includes('wall');
             let isMaze = $(this).attr('class').includes('mazeStart');
-            if(board.moving_start && !isWall && !isMaze) {
+            let isStart = $(this).attr('class').includes('start');
+            let isGoal = $(this).attr('class').includes('end');
+
+            if(board.moving_start && !isWall && !isMaze && !isGoal) {
                 $(this).attr('class','');
             }
-            if(board.moving_end && !isWall && !isMaze) {
+            if(board.moving_end && !isWall && !isMaze && !isStart) {
                 $(this).attr('class','');
             }
         }
@@ -449,7 +590,17 @@ $(document).ready( function() {
 
     $('#gbfs').on('click', () => {
         board.currentAlgo = 'gbfs';
-        $('#run').html("Run<br>Best-First Search");
+        $('#run').html("Run<br>Greedy Best-first");
+    })
+
+    $('#dijkstra').on('click', () => {
+        board.currentAlgo = 'dijkstra';
+        $('#run').html("Run<br>Dijkstra's");
+    })
+
+    $('#a').on('click', () => {
+        board.currentAlgo = 'A*';
+        $('#run').html("Run<br>A* Search");
     })
 
     $('#slow').on('click', () => {
