@@ -33,12 +33,37 @@ $(document).ready( function() {
         setTimeout(function () {
             let node = board.path[index];
             $(`#${node.row}-${node.column}`).addClass('path');
+            if(index == 0) {
+               drawBackground(); 
+            }
+
             displayPath(index + 1);
         }, Math.ceil(60*board.speed));
     }
 
+    function drawBackground() {
+        if(board.goal.parent != null && board.path.length >= 2) {
+            let startRow = board.path[0].row;
+            let startCol = board.path[0].column;
+            let nextRow = board.path[1].row;
+            let nextCol = board.path[1].column;
+            let start = board.path[0];
+
+            if(startRow > nextRow) {
+                $(`#${start.row}-${start.column}`).addClass('up');
+            }
+            else if(startRow < nextRow) {
+                $(`#${start.row}-${start.column}`).addClass('down');
+            }
+            else if(startCol > nextCol) {
+                $(`#${start.row}-${start.column}`).addClass('left');
+            }
+        }
+    }
+
     //instantly displays path
     function displayPathQuick() {
+        drawBackground();
         for(let i = 0; i < board.path.length; i++) {
             let v = board.path[i];
             $(`#${v.row}-${v.column}`).addClass('pathQuick');
@@ -461,15 +486,20 @@ $(document).ready( function() {
                     let row = board.start_node.row;
                     let col = board.start_node.column;
                     let id = `#${row}-${col}`;
-                    $(id).addClass('start');
+                    $(id).attr('class', 'start');
                     if(board.hasRan) {
-                        $(id).addClass('start pathQuick');
+                        $(id).attr('class', 'start pathQuick');
+                        drawBackground();
                     }
+
                     if(isMaze) {
                         $(this).attr('class','mazeStart');
                     }
                     else if(isGoal){
                         $(this).attr('class','end');
+                        if(board.hasRan) {
+                            $(this).attr('class','end pathQuick');
+                        }
                     }
                     else {
                         $(this).attr('class','wall');
@@ -494,6 +524,10 @@ $(document).ready( function() {
                     }
                     else if(isStart){
                         $(this).attr('class','start');
+                        if(board.hasRan) {
+                            $(this).attr('class','start pathQuick');
+                            drawBackground();
+                        }
                     }
                     else {
                         $(this).attr('class','wall');
@@ -510,6 +544,32 @@ $(document).ready( function() {
             board.moving_end = false;
             board.mouse_down = false;
         }
+    })
+
+    $('html').on('mouseup', () => {
+        let row = board.start_node.row;
+        let col = board.start_node.column;
+        let id = `#${row}-${col}`;
+
+        if(board.moving_start) {
+            $(id).attr('class', 'start');
+            if(board.hasRan) {
+                $(id).addClass('pathQuick');
+                drawBackground();
+            }
+        }
+        if(board.moving_end) {
+            row = board.goal.row;
+            col = board.goal.column;
+            id = `#${row}-${col}`;
+            $(id).attr('class', 'end');
+            if(board.hasRan) {
+                $(id).addClass('pathQuick');
+            }
+        }
+        board.moving_start = false;
+        board.moving_end = false;
+        board.mouse_down = false;
     })
 
 
@@ -663,4 +723,3 @@ $(document).ready( function() {
     $('#run').on('click', () => runAlgo('a;sldkfj'))
 
 });
-

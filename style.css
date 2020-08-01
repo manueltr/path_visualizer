@@ -223,7 +223,15 @@ td, tr {
   background-size: 14px;
   animation: animatePoint;
   animation-duration: 1s;
-
+}
+.left {
+  background-image: url(icons/chevron-left.svg);
+}
+.down {
+  background-image: url(icons/chevron-down.svg);
+}
+.up {
+  background-image: url(icons/chevron-up.svg);
 }
 
 .end {
