@@ -287,6 +287,11 @@ $(document).ready( function() {
             board.visited.push(v);
             v.isVisited = true;
 
+            if(v === board.goal) {
+                board.setPath();
+                return;
+            }
+
             for(let i = 0; i < v.neighbors.length; i++) {
                 let neighbor = v.neighbors[i];
                 if(!neighbor.isVisited && !neighbor.isWall){
@@ -297,12 +302,7 @@ $(document).ready( function() {
                     }
                 }
             }
-            if(v === board.goal) {
-                board.setPath();
-                return;
-            }
         }
-
     }
 
     // A* Search Algorithm
@@ -404,6 +404,7 @@ $(document).ready( function() {
                     if(board.goal.parent == null) {
                         console.log("No Solution");
                     }
+                    break;
                 case 'dijkstra':
                     board.hasRan = true;
                     board.running = true;
@@ -417,6 +418,7 @@ $(document).ready( function() {
                     if(board.goal.parent == null) {
                         console.log("No Solution");
                     }
+                    break;
                 case 'A*':
 
                     board.hasRan = true;
@@ -431,6 +433,7 @@ $(document).ready( function() {
                     if(board.goal.parent == null) {
                         console.log("No Solution");
                     }
+                    break;
             };
         }
     }
