@@ -1,4 +1,5 @@
 # path_visualizer
+manueltr.github.io/path_visualizer/
 
 This is my first ever JavaScript project/code. Having just started to learn JavaScript, I wanted to code something challenging. I got the idea for the project from Clément Mihailescu on Youtube.
 
@@ -13,10 +14,10 @@ Functionality
 	* A* search
 	* Dijkstra's
 
-*  A maze creation function that is based on Prism's algorithm
+*  A maze generation function that is based on Prism's algorithm
 * A clear board function
 * Option to change speed, and a toggle to add and remove walls
-* You can drag and move the start and end nodes, and after running the algorithm, you can also move them in order to immediately see how the algorithm would change with respect to the new node location.
+* You can drag and move the start and end nodes, and after running the algorithm, you can also move them in order to immediately see how the algorithm's path would change with respect to the new node location.
 
 
 
