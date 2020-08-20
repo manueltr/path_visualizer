@@ -1,5 +1,5 @@
 # path_visualizer
-manueltr.github.io/path_visualizer/
+[manueltr.github.io/path_visualizer/](https://manueltr.github.io/path_visualizer/ "https://manueltr.github.io/path_visualizer/")
 
 This is my first ever JavaScript project/code. Having just started to learn JavaScript, I wanted to code something challenging. I got the idea for the project from Clément Mihailescu on Youtube.
 
