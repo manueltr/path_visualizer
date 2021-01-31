@@ -1,7 +1,7 @@
 # path_visualizer
 [manueltr.github.io/path_visualizer/](https://manueltr.github.io/path_visualizer/ "https://manueltr.github.io/path_visualizer/")
 
-This is my first ever JavaScript project.
+This is my first JavaScript project.
 I used JavaScript, HTML, CSS, and jQuery to create it.
 
 Functionality
